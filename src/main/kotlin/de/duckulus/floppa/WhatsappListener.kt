@@ -1,5 +1,6 @@
 package de.duckulus.floppa
 
+import de.duckulus.floppa.command.CommandManager
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.listener.Listener
 import it.auties.whatsapp.listener.RegisterListener
@@ -17,6 +18,6 @@ data class WhatsappListener(val whatsapp: Whatsapp) : Listener {
         if (!whatsapp.store().userCompanionJid().toPhoneNumber().equals(info.sender().get().jid().toPhoneNumber())) {
             return
         }
-        println(content.text())
+        CommandManager.handleCommand(whatsapp, info)
     }
 }
