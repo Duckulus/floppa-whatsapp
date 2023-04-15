@@ -16,9 +16,9 @@ data class WhatsappListener(val whatsapp: Whatsapp) : Listener {
         if (content !is TextMessage) {
             return
         }
-//        if (!whatsapp.store().userCompanionJid().toPhoneNumber().equals(info.sender().get().jid().toPhoneNumber())) {
-//            return
-//        }
+        if (!whatsapp.store().userCompanionJid().toPhoneNumber().equals(info.sender().get().jid().toPhoneNumber())) {
+            return
+        }
         CommandManager.handleCommand(whatsapp, info)
         ReplyHandler.handlePossibleReply(info)
     }
