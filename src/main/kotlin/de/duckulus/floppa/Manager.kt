@@ -13,9 +13,10 @@ val env: Dotenv = Dotenv.configure().ignoreIfMissing().load()
 
 val JDOODLE_CLIENT_ID: String = env["JDOODLE_CLIENT_ID"]
 val JDOODLE_CLIENT_SECRET: String = env["JDOODLE_CLIENT_SECRET"]
+val OPENAI_API_KEY: String = env["OPENAI_API_KEY"]
 
 fun main() {
-    if (JDOODLE_CLIENT_ID.isEmpty() || JDOODLE_CLIENT_SECRET.isEmpty()) {
+    if (JDOODLE_CLIENT_ID.isEmpty() || JDOODLE_CLIENT_SECRET.isEmpty() || OPENAI_API_KEY.isEmpty()) {
         println("Missing environment variables")
         exitProcess(1)
     }

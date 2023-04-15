@@ -22,6 +22,8 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
+    implementation("com.aallam.openai:openai-client:3.2.0")
+
     implementation("com.github.auties00:whatsappweb4j:3.2.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }
