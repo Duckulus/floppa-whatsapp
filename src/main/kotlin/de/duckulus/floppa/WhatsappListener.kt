@@ -1,6 +1,7 @@
 package de.duckulus.floppa
 
 import de.duckulus.floppa.command.CommandManager
+import de.duckulus.floppa.command.ReplyHandler
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.listener.Listener
 import it.auties.whatsapp.listener.RegisterListener
@@ -19,5 +20,6 @@ data class WhatsappListener(val whatsapp: Whatsapp) : Listener {
             return
         }
         CommandManager.handleCommand(whatsapp, info)
+        ReplyHandler.handlePossibleReply(info)
     }
 }

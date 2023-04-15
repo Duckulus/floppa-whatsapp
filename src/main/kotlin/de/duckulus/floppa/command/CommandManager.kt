@@ -1,6 +1,8 @@
 package de.duckulus.floppa.command
 
-import de.duckulus.floppa.command.impl.PingCommand
+import de.duckulus.floppa.command.impl.Eval
+import de.duckulus.floppa.command.impl.FakeLoc
+import de.duckulus.floppa.command.impl.Ping
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.TextMessage
@@ -10,7 +12,9 @@ object CommandManager {
     val commands = HashMap<String, Command>()
 
     fun registerCommands() {
-        PingCommand
+        Ping
+        FakeLoc
+        Eval
     }
 
     fun handleCommand(whatsapp: Whatsapp, messageInfo: MessageInfo) {
@@ -21,8 +25,12 @@ object CommandManager {
         val commandName = words[0].substring(prefix.length)
         val args = words.subList(1, words.size).toTypedArray()
 
-        println("Executing $commandName with args ${args.contentToString()}")
+        val command = commands[commandName]
 
-        commands[commandName]?.execute(whatsapp, messageInfo, args)
+        if (command != null) {
+            println("Executing $commandName with args ${args.contentToString()}")
+            command.execute(whatsapp, messageInfo, args)
+
+        }
     }
 }
