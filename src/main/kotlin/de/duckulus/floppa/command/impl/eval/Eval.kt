@@ -1,7 +1,7 @@
-package de.duckulus.floppa.command.impl
+package de.duckulus.floppa.command.impl.eval
 
 import de.duckulus.floppa.command.Command
-import de.duckulus.floppa.http.jdoodle.eval
+import de.duckulus.floppa.command.impl.eval.jdoodle.eval
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import kotlinx.coroutines.runBlocking

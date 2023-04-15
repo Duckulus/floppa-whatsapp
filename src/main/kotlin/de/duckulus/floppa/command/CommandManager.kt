@@ -1,6 +1,6 @@
 package de.duckulus.floppa.command
 
-import de.duckulus.floppa.command.impl.Eval
+import de.duckulus.floppa.command.impl.eval.Eval
 import de.duckulus.floppa.command.impl.FakeLoc
 import de.duckulus.floppa.command.impl.Ping
 import it.auties.whatsapp.api.Whatsapp

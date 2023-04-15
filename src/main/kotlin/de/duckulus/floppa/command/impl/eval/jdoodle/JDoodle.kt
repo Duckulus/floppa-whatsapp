@@ -1,4 +1,4 @@
-package de.duckulus.floppa.http.jdoodle
+package de.duckulus.floppa.command.impl.eval.jdoodle
 
 import de.duckulus.floppa.JDOODLE_CLIENT_ID
 import de.duckulus.floppa.JDOODLE_CLIENT_SECRET

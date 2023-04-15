@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  floppa:
+    image: duckulus/floppa
+    build: .
+    platform: ${DOCKER_PLATFORM}
+    container_name: floppa
+    env_file:
+      - .env
+    volumes:
+      - ./session:/app/session
+    restart: unless-stopped

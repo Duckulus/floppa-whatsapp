@@ -1,8 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm") version "1.8.20"
     kotlin("plugin.serialization") version "1.8.20"
+    application
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "de.duckulus"
@@ -24,6 +24,19 @@ dependencies {
 
     implementation("com.github.auties00:whatsappweb4j:3.2.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+}
+
+val main = "de.duckulus.floppa.ManagerKt"
+
+application {
+    mainClass.set(main)
+    applicationDefaultJvmArgs = listOf("--enable-preview")
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = main
+    }
 }
 
 kotlin {
