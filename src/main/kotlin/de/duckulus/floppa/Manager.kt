@@ -1,6 +1,7 @@
 package de.duckulus.floppa
 
 import de.duckulus.floppa.command.CommandManager
+import de.duckulus.floppa.util.sendWebhookImage
 import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.util.*
 import it.auties.whatsapp.api.Whatsapp

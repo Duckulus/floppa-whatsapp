@@ -1,4 +1,4 @@
-package de.duckulus.floppa
+package de.duckulus.floppa.util
 
 import de.duckulus.floppa.http.ktorClient
 import io.ktor.client.request.*
