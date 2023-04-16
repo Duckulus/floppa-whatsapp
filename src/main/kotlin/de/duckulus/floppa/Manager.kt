@@ -23,7 +23,7 @@ fun main() {
     CommandManager.registerCommands()
 
     val serializer = DefaultControllerSerializer(Path.of("./session"))
-    val api = Whatsapp.newConnection(
+    val api = Whatsapp.lastConnection(
         WebOptions.builder()
             .serializer(serializer)
             .deserializer(serializer)
