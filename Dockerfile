@@ -1,8 +1,8 @@
-FROM amazoncorretto:17-alpine AS builder
+FROM amazoncorretto:17 AS builder
 
 WORKDIR /gradle
 
-RUN apk add binutils
+RUN yum install binutils -y
 
 #Build JRE to reduce image size
 RUN $JAVA_HOME/bin/jlink \
@@ -20,7 +20,7 @@ RUN chmod +x ./gradlew
 
 RUN ./gradlew shadowJar
 
-FROM alpine:latest AS runner
+FROM ubuntu:latest AS runner
 
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
