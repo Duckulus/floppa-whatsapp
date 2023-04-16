@@ -19,7 +19,8 @@ object Image : Command("image", "generates an image with DALL.E") {
             whatsapp.sendMessage(messageInfo.chat(), "Please provide a prompt")
             return
         }
-        val prompt = args.copyOfRange(1, args.size).joinToString(" ")
+        val prompt = args.joinToString(" ")
+        println("prompt: $prompt")
         runBlocking {
             val reply = openAi.imageJSON(
                 ImageCreation(
@@ -27,8 +28,13 @@ object Image : Command("image", "generates an image with DALL.E") {
                     size = ImageSize("256x256")
                 )
             )
-            val message = ImageMessage.simpleBuilder().media(Base64.decode(reply.first().b64JSON)).build()
-            whatsapp.sendMessage(messageInfo.chat(), message)
+            reply.forEach {
+                whatsapp.sendMessage(
+                    messageInfo.chat(),
+                    ImageMessage.simpleBuilder().media(Base64.decode(it.b64JSON)).build()
+                )
+            }
+
         }
     }
 

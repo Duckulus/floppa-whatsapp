@@ -7,7 +7,7 @@ import it.auties.whatsapp.model.info.MessageInfo
 object Ping : Command("ping", "pongs") {
 
     override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>) {
-        whatsapp.sendMessage(messageInfo.chat(), "pong")
+        whatsapp.sendMessage(messageInfo.chat(), "pong", messageInfo)
     }
 
 }

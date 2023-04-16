@@ -18,7 +18,7 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo") {
             whatsapp.sendMessage(messageInfo.chat(), "Please provide a prompt")
             return
         }
-        val prompt = args.copyOfRange(1, args.size).joinToString(" ")
+        val prompt = args.joinToString(" ")
         runBlocking {
             val reply = openAi.chatCompletion(
                 ChatCompletionRequest(
