@@ -1,6 +1,10 @@
-FROM amazoncorretto:17-alpine AS builder
+FROM alpine:latest AS builder
 
 WORKDIR /gradle
+
+RUN apk add openjdk17
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 RUN apk add binutils
 
@@ -16,9 +20,11 @@ RUN $JAVA_HOME/bin/jlink \
 
 COPY . .
 
-RUN chmod +x ./gradlew
+#RUN chmod +x ./gradlew
 
-RUN ./gradlew shadowJar
+RUN apk add gradle
+
+RUN gradle shadowJar --no-daemon
 
 FROM alpine:latest AS runner
 
