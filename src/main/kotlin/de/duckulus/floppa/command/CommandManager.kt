@@ -5,6 +5,7 @@ import de.duckulus.floppa.command.impl.Ping
 import de.duckulus.floppa.command.impl.eval.Eval
 import de.duckulus.floppa.command.impl.openai.Chat
 import de.duckulus.floppa.command.impl.openai.Image
+import de.duckulus.floppa.command.impl.openai.Transcribe
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.TextMessage
@@ -19,6 +20,7 @@ object CommandManager {
         Eval
         Chat
         Image
+        Transcribe
     }
 
     fun handleCommand(whatsapp: Whatsapp, messageInfo: MessageInfo) {
@@ -33,7 +35,11 @@ object CommandManager {
 
         if (command != null) {
             println("Executing $commandName with args ${args.contentToString()}")
-            command.execute(whatsapp, messageInfo, args)
+            try {
+                command.execute(whatsapp, messageInfo, args)
+            } catch (e: Exception) {
+                whatsapp.sendMessage(messageInfo.chat(), "An Error occured while executing the command: ${e.message}")
+            }
 
         }
     }

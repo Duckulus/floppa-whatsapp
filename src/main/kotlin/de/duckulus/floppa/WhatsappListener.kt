@@ -8,15 +8,17 @@ import it.auties.whatsapp.listener.RegisterListener
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.TextMessage
 
+
 @RegisterListener
 data class WhatsappListener(val whatsapp: Whatsapp) : Listener {
 
     override fun onNewMessage(info: MessageInfo) {
         val content = info.message().content()
-        if (content !is TextMessage) {
+
+        if (!whatsapp.store().userCompanionJid().toPhoneNumber().equals(info.sender().get().jid().toPhoneNumber())) {
             return
         }
-        if (!whatsapp.store().userCompanionJid().toPhoneNumber().equals(info.sender().get().jid().toPhoneNumber())) {
+        if (content !is TextMessage) {
             return
         }
         CommandManager.handleCommand(whatsapp, info)

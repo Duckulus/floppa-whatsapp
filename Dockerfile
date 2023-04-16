@@ -29,6 +29,10 @@ COPY --from=builder /customjre $JAVA_HOME
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y ffmpeg
+
+RUN apt-get clean && apt-get autoclean && apt-get autoremove
+
 COPY --from=builder /gradle/build/libs/*.jar /app/floppa.jar
 
 CMD ["/jre/bin/java", "--enable-preview", "-jar", "./floppa.jar"]
