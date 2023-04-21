@@ -24,7 +24,7 @@ dependencies {
 
     implementation("com.aallam.openai:openai-client:3.2.0")
 
-    implementation("com.github.auties00:whatsappweb4j:3.2.3")
+    implementation("com.github.auties00:whatsappweb4j:3.3.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }
 
