@@ -18,9 +18,38 @@ import java.util.concurrent.TimeUnit
 const val inFileName = "in.ogg"
 const val outFileName = "out.mp3"
 
+@OptIn(BetaOpenAI::class)
+suspend fun transcribeMessage(message: AudioMessage): String {
+    val audio: ByteArray
+    if (message.voiceMessage()) {
+        val inFile = File(inFileName)
+        FileUtils.writeByteArrayToFile(inFile, message.decodedMedia().get())
+        ProcessBuilder("ffmpeg -i $inFileName -acodec libmp3lame -y $outFileName".split(" "))
+            .directory(File("./"))
+            .redirectError(ProcessBuilder.Redirect.INHERIT)
+            .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+            .start()
+            .waitFor(30, TimeUnit.SECONDS)
+        val outFile = File(outFileName)
+        if (!outFile.exists()) {
+            throw IllegalStateException("ffmpeg failed to convert file")
+        }
+        audio = File(outFileName).readBytes()
+    } else {
+        audio = message.decodedMedia().get()
+    }
+
+    val result = openAi.transcription(
+        TranscriptionRequest(
+            audio = FileSource("test.mp3", Buffer().write(audio)),
+            model = ModelId("whisper-1")
+        )
+    )
+    return result.text
+}
+
 object Transcribe : Command("transcribe", "transcribes a voice message") {
 
-    @OptIn(BetaOpenAI::class)
     override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>) {
         val quoted = messageInfo.quotedMessage()
         if (quoted.isEmpty) {
@@ -41,33 +70,9 @@ object Transcribe : Command("transcribe", "transcribes a voice message") {
                 whatsapp.sendMessage(messageInfo.chat(), "Message is empty")
                 return@runBlocking
             }
-            val audio: ByteArray
-            if (content.voiceMessage()) {
-                val inFile = File(inFileName)
-                FileUtils.writeByteArrayToFile(inFile, content.decodedMedia().get())
-                ProcessBuilder("ffmpeg -i $inFileName -acodec libmp3lame -y $outFileName".split(" "))
-                    .directory(File("./"))
-                    .redirectError(ProcessBuilder.Redirect.INHERIT)
-                    .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                    .start()
-                    .waitFor(30, TimeUnit.SECONDS)
-                val outFile = File(outFileName)
-                if (!outFile.exists()) {
-                    whatsapp.sendMessage(messageInfo.chat(), "Error")
-                    return@runBlocking
-                }
-                audio = File(outFileName).readBytes()
-            } else {
-                audio = content.decodedMedia().get()
-            }
             try {
-                val result = openAi.transcription(
-                    TranscriptionRequest(
-                        audio = FileSource("test.mp3", Buffer().write(audio)),
-                        model = ModelId("whisper-1")
-                    )
-                )
-                whatsapp.sendMessage(messageInfo.chat(), "Transcription: ${result.text}")
+                val result = transcribeMessage(content)
+                whatsapp.sendMessage(messageInfo.chat(), "Transcription: $result")
             } catch (exception: OpenAIException) {
                 whatsapp.sendMessage(messageInfo.chat(), "Error: ${exception.message}")
             }
