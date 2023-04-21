@@ -29,7 +29,14 @@ COPY --from=builder /customjre $JAVA_HOME
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg && apt-get install -y locales
+
+# Set the locale
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 RUN apt-get clean && apt-get autoclean && apt-get autoremove
 
