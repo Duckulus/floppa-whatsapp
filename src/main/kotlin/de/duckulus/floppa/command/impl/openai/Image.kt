@@ -20,7 +20,6 @@ object Image : Command("image", "generates an image with DALL.E") {
             return
         }
         val prompt = args.joinToString(" ")
-        println("prompt: $prompt")
         runBlocking {
             val reply = openAi.imageJSON(
                 ImageCreation(

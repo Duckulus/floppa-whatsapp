@@ -26,6 +26,10 @@ dependencies {
 
     implementation("com.github.auties00:whatsappweb4j:3.3.1")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+    implementation("ch.qos.logback:logback-classic:1.4.7")
+    implementation("org.codehaus.janino:janino:3.1.9")
+    implementation("io.github.oshai:kotlin-logging-jvm:4.0.0-beta-22")
 }
 
 val main = "de.duckulus.floppa.ManagerKt"

@@ -6,11 +6,15 @@ import de.duckulus.floppa.command.impl.eval.Eval
 import de.duckulus.floppa.command.impl.openai.Chat
 import de.duckulus.floppa.command.impl.openai.Image
 import de.duckulus.floppa.command.impl.openai.Transcribe
+import io.github.oshai.KotlinLogging
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.TextMessage
 
 object CommandManager {
+
+    private val logger = KotlinLogging.logger {}
+
     private const val prefix = "."
     val commands = HashMap<String, Command>()
 
@@ -34,10 +38,11 @@ object CommandManager {
         val command = commands[commandName]
 
         if (command != null) {
-            println("Executing $commandName with args ${args.contentToString()}")
+            logger.info("Executing $commandName with args ${args.contentToString()}")
             try {
                 command.execute(whatsapp, messageInfo, args)
             } catch (e: Exception) {
+                logger.error(e) { "An Error occured while executing the command: ${e.message}" }
                 whatsapp.sendMessage(messageInfo.chat(), "An Error occured while executing the command: ${e.message}")
             }
 

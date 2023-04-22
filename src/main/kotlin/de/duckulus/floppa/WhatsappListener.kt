@@ -6,7 +6,6 @@ import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.listener.OnNewMessage
 import it.auties.whatsapp.model.message.standard.TextMessage
 
-
 fun Whatsapp.registerFloppaHandler() {
     addNewMessageListener(OnNewMessage { info ->
         val content = info.message().content()
