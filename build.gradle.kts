@@ -26,6 +26,7 @@ dependencies {
 
     implementation("com.github.auties00:whatsappweb4j:3.3.1")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    implementation("org.openpnp:opencv:4.5.1-2")
 
     implementation("ch.qos.logback:logback-classic:1.4.7")
     implementation("org.codehaus.janino:janino:3.1.9")

@@ -2,6 +2,7 @@ package de.duckulus.floppa.command
 
 import de.duckulus.floppa.command.impl.FakeLoc
 import de.duckulus.floppa.command.impl.Ping
+import de.duckulus.floppa.command.impl.Sticker
 import de.duckulus.floppa.command.impl.eval.Eval
 import de.duckulus.floppa.command.impl.openai.Chat
 import de.duckulus.floppa.command.impl.openai.Image
@@ -25,6 +26,7 @@ object CommandManager {
         Chat
         Image
         Transcribe
+        Sticker
     }
 
     fun handleCommand(whatsapp: Whatsapp, messageInfo: MessageInfo) {
