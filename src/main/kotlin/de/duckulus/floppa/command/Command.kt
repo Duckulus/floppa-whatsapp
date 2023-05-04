@@ -6,7 +6,8 @@ import it.auties.whatsapp.model.info.MessageInfo
 
 abstract class Command(
     name: String,
-    val description: String
+    val description: String,
+    val minimumPermissionLevel: PermissionLevel = PermissionLevel.ADMIN
 ) {
     private val logger = KotlinLogging.logger(name)
 

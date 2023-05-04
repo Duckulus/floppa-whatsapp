@@ -8,7 +8,7 @@ plugins {
 group = "de.duckulus"
 version = "0.0.1"
 
-val ktorVersion = "2.2.4"
+
 
 repositories {
     mavenCentral()
@@ -18,9 +18,17 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
+    val ktorVersion = "2.2.4"
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
+
+    val exposedVersion = "0.41.1"
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.xerial:sqlite-jdbc:3.41.2.1")
+    implementation("com.zaxxer:HikariCP:5.0.1")
 
     implementation("com.aallam.openai:openai-client:3.2.0")
 

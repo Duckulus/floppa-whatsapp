@@ -1,22 +1,33 @@
 package de.duckulus.floppa
 
 import de.duckulus.floppa.command.CommandManager
+import de.duckulus.floppa.command.PermissionLevel
 import de.duckulus.floppa.command.ReplyHandler
+import de.duckulus.floppa.db.DB
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.listener.OnNewMessage
+import it.auties.whatsapp.model.contact.ContactJid
 import it.auties.whatsapp.model.message.standard.TextMessage
 
 fun Whatsapp.registerFloppaHandler() {
     addNewMessageListener(OnNewMessage { info ->
         val content = info.message().content()
 
-        if (!store().jid().toPhoneNumber().equals(info.sender().get().jid().toPhoneNumber())) {
-            return@OnNewMessage
-        }
+
         if (content !is TextMessage) {
             return@OnNewMessage
         }
-        CommandManager.handleCommand(this, info)
+
+        val permissionLevel = getPermissionLevel(this, info.senderJid())
+        CommandManager.handleCommand(this, info, permissionLevel)
         ReplyHandler.handlePossibleReply(info)
     })
+}
+
+fun getPermissionLevel(whatsapp: Whatsapp, jid: ContactJid): PermissionLevel {
+    if (whatsapp.store().jid().toPhoneNumber().equals(jid.toPhoneNumber())) {
+        return PermissionLevel.OP
+    }
+    val level = DB.getPermissionLevel(jid.toPhoneNumber())
+    return PermissionLevel.values()[level]
 }

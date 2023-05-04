@@ -9,4 +9,5 @@ services:
       - .env
     volumes:
       - ./session:/app/session
+      - ./floppa.db:/app/floppa.db
     restart: unless-stopped

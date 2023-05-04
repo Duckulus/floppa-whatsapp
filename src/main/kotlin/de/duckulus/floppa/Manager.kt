@@ -1,6 +1,7 @@
 package de.duckulus.floppa
 
 import de.duckulus.floppa.command.CommandManager
+import de.duckulus.floppa.db.DB
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.oshai.KotlinLogging
 import it.auties.whatsapp.api.ConnectionType
@@ -19,6 +20,8 @@ val logger = KotlinLogging.logger("Floppa")
 
 fun main() {
     CommandManager.registerCommands()
+    DB
+    DB.createTables()
 
     val serializer = DefaultControllerSerializer(Path("./session"))
     val api = WebOptionsBuilder(null, serializer, ConnectionType.LAST).build()
