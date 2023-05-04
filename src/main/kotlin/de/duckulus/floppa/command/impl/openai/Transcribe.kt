@@ -61,15 +61,15 @@ object Transcribe : Command("transcribe", "transcribes a voice message") {
             whatsapp.sendMessage(messageInfo.chat(), "This command only works with voice messages")
             return
         }
+        if (content.duration() > 300) {
+            whatsapp.sendMessage(messageInfo.chat(), "Audio too long")
+            return
+        }
+        if (content.decodedMedia().isEmpty) {
+            whatsapp.sendMessage(messageInfo.chat(), "Message is empty")
+            return
+        }
         runBlocking {
-            if (content.duration() > 30) {
-                whatsapp.sendMessage(messageInfo.chat(), "Audio too long")
-                return@runBlocking
-            }
-            if (content.decodedMedia().isEmpty) {
-                whatsapp.sendMessage(messageInfo.chat(), "Message is empty")
-                return@runBlocking
-            }
             try {
                 val result = transcribeMessage(content)
                 whatsapp.sendMessage(messageInfo.chat(), "Transcription: $result")
