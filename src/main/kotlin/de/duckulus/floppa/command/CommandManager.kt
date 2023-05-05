@@ -42,7 +42,7 @@ object CommandManager {
         val commandName = words[0].substring(prefix.length)
         val args = words.subList(1, words.size).toTypedArray()
 
-        val command = commands[commandName]
+        val command = commands[commandName.lowercase()]
 
         if (command != null) {
             if (!permissionLevel.isAtLeast(command.minimumPermissionLevel)) {

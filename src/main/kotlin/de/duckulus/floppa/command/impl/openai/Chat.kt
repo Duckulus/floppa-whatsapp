@@ -29,7 +29,6 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
     @OptIn(BetaOpenAI::class)
     override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
         runBlocking {
-            whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
             val quoted = ctx.quotedText
             var prompt = if (quoted.isEmpty) "" else quoted.get() + "\n\n"
             prompt += args.joinToString(" ")
@@ -38,6 +37,7 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
                 whatsapp.sendMessage(messageInfo.chat(), "Please provide a prompt or reply to a message")
                 return@runBlocking
             }
+            whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
 
             val contextList: MutableList<ChatMessage>
 
