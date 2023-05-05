@@ -5,7 +5,7 @@ import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 
 abstract class Command(
-    name: String,
+    val name: String,
     val description: String,
     val minimumPermissionLevel: PermissionLevel = PermissionLevel.ADMIN
 ) {

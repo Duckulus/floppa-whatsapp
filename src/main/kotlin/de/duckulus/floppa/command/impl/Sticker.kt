@@ -56,6 +56,9 @@ object Sticker : Command("sticker", "Create a Sticker from an image", Permission
             .thumbnail(webpThumbnail)
             .animated(false)
             .build()
+        stickerMessage.width(content.width())
+        stickerMessage.height(content.height())
+        
         whatsapp.sendMessage(messageInfo.chat(), stickerMessage)
     }
 

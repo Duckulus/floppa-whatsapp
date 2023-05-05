@@ -1,9 +1,6 @@
 package de.duckulus.floppa.command
 
-import de.duckulus.floppa.command.impl.FakeLoc
-import de.duckulus.floppa.command.impl.Permission
-import de.duckulus.floppa.command.impl.Ping
-import de.duckulus.floppa.command.impl.Sticker
+import de.duckulus.floppa.command.impl.*
 import de.duckulus.floppa.command.impl.eval.Eval
 import de.duckulus.floppa.command.impl.openai.Chat
 import de.duckulus.floppa.command.impl.openai.Image
@@ -33,6 +30,7 @@ object CommandManager {
         Transcribe
         Sticker
         Permission
+        Help
     }
 
     suspend fun handleCommand(whatsapp: Whatsapp, messageInfo: MessageInfo, permissionLevel: PermissionLevel) {
