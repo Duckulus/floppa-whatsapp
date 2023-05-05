@@ -32,7 +32,7 @@ object Download : Command("download", "Downloads a file from the internet using 
                     return@runBlocking
                 }
                 val process = ProcessBuilder(
-                    "yt-dlp $url -f \"bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\" -o $outFileName --force-overwrites --max-filesize 100M --no-playlist".split(
+                    "/usr/local/bin/yt-dlp $url -f mp4 -S \"size:100M\" -o $outFileName --force-overwrites --max-filesize 100M --no-playlist".split(
                         " "
                     )
                 )

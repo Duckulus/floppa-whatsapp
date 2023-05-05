@@ -29,7 +29,9 @@ COPY --from=builder /customjre $JAVA_HOME
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y ffmpeg && apt-get install -y locales && apt-get install -y yt-dlp
+RUN apt-get update && apt-get install -y ffmpeg && apt-get install -y locales && apt-get install -y curl && apt-get install -y python3
+
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && chmod a+rx /usr/local/bin/yt-dlp
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \

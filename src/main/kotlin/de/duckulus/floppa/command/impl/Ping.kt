@@ -9,7 +9,7 @@ import it.auties.whatsapp.model.info.MessageInfo
 object Ping : Command("ping", "pongs", PermissionLevel.USER) {
 
     override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
-        whatsapp.sendMessage(messageInfo.chat(), "pong")
+        whatsapp.sendMessage(messageInfo.chat(), "pong", messageInfo)
     }
 
 }
