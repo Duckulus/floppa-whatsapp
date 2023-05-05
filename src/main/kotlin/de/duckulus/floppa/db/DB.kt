@@ -34,9 +34,18 @@ object DB {
     }
 
     fun setPermissionLevel(phoneNumber: String, newValue: Int) = transaction {
-        User.update({ User.phoneNumber eq phoneNumber }) {
-            it[permissionLevel] = newValue
+        val query = User.select(User.phoneNumber eq phoneNumber)
+        if (query.count().toInt() == 0) {
+            User.insert {
+                it[User.phoneNumber] = phoneNumber
+                it[permissionLevel] = newValue
+            }
+        } else {
+            User.update({ User.phoneNumber eq phoneNumber }) {
+                it[permissionLevel] = newValue
+            }
         }
+
     }
 
 
