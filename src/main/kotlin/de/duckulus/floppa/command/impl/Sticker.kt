@@ -1,6 +1,8 @@
 package de.duckulus.floppa.command.impl
 
 import de.duckulus.floppa.command.Command
+import de.duckulus.floppa.command.CommandContext
+import de.duckulus.floppa.command.PermissionLevel
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.ImageMessage
@@ -21,13 +23,13 @@ fun encodeToWebP(image: ByteArray): ByteArray {
     }
 }
 
-object Sticker : Command("sticker", "Create a Sticker from an image") {
+object Sticker : Command("sticker", "Create a Sticker from an image", PermissionLevel.USER) {
 
     init {
         OpenCV.loadShared()
     }
 
-    override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>) {
+    override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
         val message = messageInfo.quotedMessage()
         if (message.isEmpty) {
             whatsapp.sendMessage(messageInfo.chat(), "You need to reply to a message")

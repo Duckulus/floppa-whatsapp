@@ -16,5 +16,6 @@ abstract class Command(
         logger.info("Registering $name command")
     }
 
-    abstract fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>)
+    abstract fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext)
+
 }

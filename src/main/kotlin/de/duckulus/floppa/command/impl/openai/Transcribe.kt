@@ -2,14 +2,14 @@ package de.duckulus.floppa.command.impl.openai
 
 import com.aallam.openai.api.BetaOpenAI
 import com.aallam.openai.api.audio.TranscriptionRequest
-import com.aallam.openai.api.exception.OpenAIException
 import com.aallam.openai.api.file.FileSource
 import com.aallam.openai.api.model.ModelId
 import de.duckulus.floppa.command.Command
+import de.duckulus.floppa.command.CommandContext
+import de.duckulus.floppa.command.PermissionLevel
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.AudioMessage
-import kotlinx.coroutines.runBlocking
 import okio.Buffer
 import org.apache.commons.io.FileUtils
 import java.io.File
@@ -48,35 +48,21 @@ suspend fun transcribeMessage(message: AudioMessage): String {
     return result.text
 }
 
-object Transcribe : Command("transcribe", "transcribes a voice message") {
+object Transcribe : Command("transcribe", "transcribes a voice message", PermissionLevel.ADMIN) {
 
-    override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>) {
+    override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
         val quoted = messageInfo.quotedMessage()
         if (quoted.isEmpty) {
             whatsapp.sendMessage(messageInfo.chat(), "Please reply to a voice message")
             return
         }
         val content = quoted.get().message().content()
-        if (content !is AudioMessage) {
+        val result = ctx.quotedText
+        if (content !is AudioMessage || result.isEmpty) {
             whatsapp.sendMessage(messageInfo.chat(), "This command only works with voice messages")
             return
         }
-        if (content.duration() > 300) {
-            whatsapp.sendMessage(messageInfo.chat(), "Audio too long")
-            return
-        }
-        if (content.decodedMedia().isEmpty) {
-            whatsapp.sendMessage(messageInfo.chat(), "Message is empty")
-            return
-        }
-        runBlocking {
-            try {
-                val result = transcribeMessage(content)
-                whatsapp.sendMessage(messageInfo.chat(), "Transcription: $result")
-            } catch (exception: OpenAIException) {
-                whatsapp.sendMessage(messageInfo.chat(), "Error: ${exception.message}")
-            }
-        }
+        whatsapp.sendMessage(messageInfo.chat(), "Transcription: ${result.get()}")
     }
 
 }

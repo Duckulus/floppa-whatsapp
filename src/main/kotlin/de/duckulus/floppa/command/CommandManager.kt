@@ -8,10 +8,14 @@ import de.duckulus.floppa.command.impl.eval.Eval
 import de.duckulus.floppa.command.impl.openai.Chat
 import de.duckulus.floppa.command.impl.openai.Image
 import de.duckulus.floppa.command.impl.openai.Transcribe
+import de.duckulus.floppa.command.impl.openai.transcribeMessage
 import io.github.oshai.KotlinLogging
+import it.auties.whatsapp.api.Emojy
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
+import it.auties.whatsapp.model.message.standard.AudioMessage
 import it.auties.whatsapp.model.message.standard.TextMessage
+import java.util.*
 
 object CommandManager {
 
@@ -31,7 +35,7 @@ object CommandManager {
         Permission
     }
 
-    fun handleCommand(whatsapp: Whatsapp, messageInfo: MessageInfo, permissionLevel: PermissionLevel) {
+    suspend fun handleCommand(whatsapp: Whatsapp, messageInfo: MessageInfo, permissionLevel: PermissionLevel) {
         val content = messageInfo.message().content()
         if (content !is TextMessage) return
         if (!content.text().startsWith(prefix)) return
@@ -48,17 +52,32 @@ object CommandManager {
                         messageInfo.senderJid().toPhoneNumber()
                     } tried to execute $commandName without permission"
                 )
-                whatsapp.sendMessage(messageInfo.chat(), "You don't have permission to execute this command")
+                whatsapp.sendReaction(messageInfo, Emojy.CROSS_MARK)
                 return
             }
             try {
                 logger.info("Executing $commandName with args ${args.contentToString()}")
-                command.execute(whatsapp, messageInfo, args)
+                val quotedText = getQuotedText(messageInfo, permissionLevel)
+                val ctx = CommandContext(quotedText, permissionLevel)
+                command.execute(whatsapp, messageInfo, args, ctx)
             } catch (e: Exception) {
                 logger.error(e) { "An Error occured while executing the command: ${e.message}" }
                 whatsapp.sendMessage(messageInfo.chat(), "An Error occured while executing the command: ${e.message}")
             }
 
+        }
+    }
+
+    suspend fun getQuotedText(messageInfo: MessageInfo, permissionLevel: PermissionLevel): Optional<String> {
+        val quotedMessage = messageInfo.quotedMessage()
+        if (quotedMessage.isEmpty) return Optional.empty()
+        val content = quotedMessage.get().message().content()
+        return if (content is TextMessage) {
+            Optional.of(content.text())
+        } else if (content is AudioMessage && permissionLevel.isAtLeast(PermissionLevel.ADMIN)) { //Only admins can transcribe audio to save money
+            Optional.of(transcribeMessage(content))
+        } else {
+            Optional.empty()
         }
     }
 }
