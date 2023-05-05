@@ -31,6 +31,7 @@ object CommandManager {
         Sticker
         Permission
         Help
+        Download
     }
 
     suspend fun handleCommand(whatsapp: Whatsapp, messageInfo: MessageInfo, permissionLevel: PermissionLevel) {
