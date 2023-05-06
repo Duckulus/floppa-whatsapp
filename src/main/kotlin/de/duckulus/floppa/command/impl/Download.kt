@@ -24,10 +24,7 @@ object Download : Command("download", "Downloads a file from the internet using 
     private val downloadMutex = Mutex()
 
     override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
-        if (downloadMutex.isLocked) {
-            whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
-
-        }
+        whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
         runBlocking {
             downloadMutex.withLock {
 

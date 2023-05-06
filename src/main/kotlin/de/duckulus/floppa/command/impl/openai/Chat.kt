@@ -1,9 +1,11 @@
 package de.duckulus.floppa.command.impl.openai
 
 import com.aallam.openai.api.BetaOpenAI
+import com.aallam.openai.api.chat.ChatCompletion
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.exception.OpenAIAPIException
 import com.aallam.openai.api.model.ModelId
 import de.duckulus.floppa.command.Command
 import de.duckulus.floppa.command.CommandContext
@@ -21,7 +23,7 @@ const val contextSize = 10
 
 object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLevel.ADMIN) {
 
-    private val mutex = Mutex()
+    private val contextMutex = Mutex()
 
     @OptIn(BetaOpenAI::class)
     private val contexts = mutableMapOf<ContactJid, ArrayBlockingQueue<ChatMessage>>()
@@ -41,7 +43,7 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
 
             val contextList: MutableList<ChatMessage>
 
-            mutex.withLock {
+            contextMutex.withLock {
                 val context = if (contexts[messageInfo.chatJid()] == null) {
                     ArrayBlockingQueue<ChatMessage>(contextSize)
                 } else {
@@ -54,15 +56,29 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
             }
 
 
-            val reply = openAi.chatCompletion(
-                ChatCompletionRequest(
-                    messages = contextList,
-                    model = ModelId("gpt-3.5-turbo")
+            val reply: ChatCompletion
+
+            try {
+                reply = openAi.chatCompletion(
+                    ChatCompletionRequest(
+                        messages = contextList, model = ModelId("gpt-3.5-turbo")
+                    )
                 )
-            )
+            } catch (e: OpenAIAPIException) {
+                if (e.message?.contains("This model's maximum context length") == true) {
+                    whatsapp.sendMessage(
+                        messageInfo.chat(),
+                        "Error: Maximum context length exceeded. Use the clearcontext command to clear the context."
+                    )
+                    return@runBlocking
+                } else {
+                    throw e
+                }
+            }
+
             whatsapp.sendMessage(messageInfo.chat(), reply.choices.first().message?.content ?: "No response :(")
 
-            mutex.withLock {
+            contextMutex.withLock {
                 val context = if (contexts[messageInfo.chatJid()] == null) {
                     ArrayBlockingQueue<ChatMessage>(contextSize)
                 } else {
@@ -81,6 +97,20 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
 
                 contexts[messageInfo.chatJid()] = context
             }
+        }
+
+    }
+
+    object ClearContextCommand : Command("clearcontext", "clears the chat context", PermissionLevel.ADMIN) {
+
+        @OptIn(BetaOpenAI::class)
+        override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
+            runBlocking {
+                contextMutex.withLock {
+                    contexts.remove(messageInfo.chatJid())
+                }
+            }
+            whatsapp.sendReaction(messageInfo, Emojy.CHECK_MARK_BUTTON)
         }
 
     }

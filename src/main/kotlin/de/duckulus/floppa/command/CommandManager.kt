@@ -26,6 +26,7 @@ object CommandManager {
         FakeLoc
         Eval
         Chat
+        Chat.ClearContextCommand
         Image
         Transcribe
         Sticker
