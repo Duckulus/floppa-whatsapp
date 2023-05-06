@@ -16,7 +16,8 @@ import java.util.regex.Pattern
 
 const val outFileName = "out.mp4"
 
-val URL_PATTERN: Pattern = Pattern.compile("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
+val URL_PATTERN: Pattern =
+    Pattern.compile("^https?://(?:www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b[-a-zA-Z0-9()@:%_+.~#?&/=]*$")
 
 object Download : Command("download", "Downloads a file from the internet using yt-dlp", PermissionLevel.ADMIN) {
 
@@ -29,7 +30,14 @@ object Download : Command("download", "Downloads a file from the internet using 
         }
         runBlocking {
             downloadMutex.withLock {
-                val url = if (ctx.quotedText.isEmpty) args[0] else ctx.quotedText.get().split(" ").find { URL_PATTERN.matcher(it).matches() } ?: ""
+
+                val url = if (args.isNotEmpty()) {
+                    args[0]
+                } else if (!ctx.quotedText.isEmpty) {
+                    ctx.quotedText.get().split(" ")
+                        .find { URL_PATTERN.matcher(it).matches() } ?: ""
+                } else ""
+
                 if (url.isEmpty()) {
                     whatsapp.sendMessage(messageInfo.chat(), "No url provided")
                     return@runBlocking
