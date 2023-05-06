@@ -18,7 +18,7 @@ object CommandManager {
 
     private val logger = KotlinLogging.logger {}
 
-    private const val prefix = "."
+    const val prefix = "."
     val commands = HashMap<String, Command>()
 
     fun registerCommands() {
