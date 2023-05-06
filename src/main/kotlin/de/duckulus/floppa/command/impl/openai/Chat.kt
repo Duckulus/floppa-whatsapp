@@ -52,7 +52,6 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
 
                 contextList = context.toMutableList()
                 contextList.add(ChatMessage(ChatRole.User, prompt))
-                println(contextList.toTypedArray().contentToString())
             }
 
 

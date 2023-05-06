@@ -26,7 +26,7 @@ fun encodeToWebP(image: ByteArray): ByteArray {
 object Sticker : Command("sticker", "Create a Sticker from an image", PermissionLevel.USER) {
 
     init {
-        OpenCV.loadShared()
+        OpenCV.loadLocally()
     }
 
     override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
