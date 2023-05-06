@@ -12,8 +12,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 const val outFileName = "out.mp4"
+
+val URL_PATTERN: Pattern = Pattern.compile("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
 
 object Download : Command("download", "Downloads a file from the internet using yt-dlp", PermissionLevel.ADMIN) {
 
@@ -26,7 +29,7 @@ object Download : Command("download", "Downloads a file from the internet using 
         }
         runBlocking {
             downloadMutex.withLock {
-                val url = if (ctx.quotedText.isEmpty) args[0] else ctx.quotedText.get().split(" ")[0]
+                val url = if (ctx.quotedText.isEmpty) args[0] else ctx.quotedText.get().split(" ").find { URL_PATTERN.matcher(it).matches() } ?: ""
                 if (url.isEmpty()) {
                     whatsapp.sendMessage(messageInfo.chat(), "No url provided")
                     return@runBlocking
@@ -44,8 +47,6 @@ object Download : Command("download", "Downloads a file from the internet using 
                     .redirectError(ProcessBuilder.Redirect.INHERIT)
                     .redirectOutput(ProcessBuilder.Redirect.INHERIT)
                     .start()
-                val result = String(process.inputStream.readAllBytes())
-                println(result)
                 process.waitFor(120, TimeUnit.SECONDS)
                 if (!File(outFileName).exists()) {
                     whatsapp.sendMessage(messageInfo.chat(), "Download failed")
@@ -58,7 +59,6 @@ object Download : Command("download", "Downloads a file from the internet using 
                 val message = VideoMessage.simpleVideoBuilder()
                     .media(File(outFileName).readBytes())
                     .thumbnail(ByteArray(0)) // dont touch
-                    .caption(result)
                     .build()
                 whatsapp.sendMessage(messageInfo.chat(), message)
                 File(outFileName).delete()
