@@ -5,18 +5,17 @@ import de.duckulus.floppa.command.CommandContext
 import de.duckulus.floppa.command.PermissionLevel
 import de.duckulus.floppa.db.DB
 import de.duckulus.floppa.getPermissionLevel
-import it.auties.whatsapp.api.Emojy
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 
-object Permission : Command("permission", "Read and Write the permission level of a user", PermissionLevel.ZERO) {
+object Permission : Command("permission", "Read and Write the permission level of a user", PermissionLevel.USER) {
 
-    override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx:CommandContext) {
+    override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
         if (args.isEmpty()) {
             val permissionLevel = getPermissionLevel(whatsapp, messageInfo.senderJid())
             whatsapp.sendMessage(messageInfo.chat(), "Your permission level is ${permissionLevel.name}")
             return
-        } else if(ctx.permissionLevel.isAtLeast(PermissionLevel.OP)) {
+        } else if (ctx.permissionLevel.isAtLeast(PermissionLevel.OP)) {
             if (!args[0].startsWith("@")) {
                 whatsapp.sendMessage(messageInfo.chat(), "Please specify a user")
                 return
@@ -47,8 +46,6 @@ object Permission : Command("permission", "Read and Write the permission level o
                     "The permission level of $phoneNumber is now ${newPermissionLevel.name}"
                 )
             }
-        } else {
-            whatsapp.sendReaction(messageInfo, Emojy.CROSS_MARK)
         }
     }
 

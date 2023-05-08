@@ -7,7 +7,6 @@ import de.duckulus.floppa.command.impl.openai.Image
 import de.duckulus.floppa.command.impl.openai.Transcribe
 import de.duckulus.floppa.command.impl.openai.transcribeMessage
 import io.github.oshai.KotlinLogging
-import it.auties.whatsapp.api.Emojy
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.AudioMessage
@@ -52,7 +51,6 @@ object CommandManager {
                         messageInfo.senderJid().toPhoneNumber()
                     } tried to execute $commandName without permission"
                 )
-                whatsapp.sendReaction(messageInfo, Emojy.CROSS_MARK)
                 return
             }
             try {
