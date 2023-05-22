@@ -32,7 +32,7 @@ dependencies {
 
     implementation("com.aallam.openai:openai-client:3.2.0")
 
-    implementation("com.github.auties00:whatsappweb4j:3.3.1")
+    implementation("com.github.auties00:whatsappweb4j:3.4.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.openpnp:opencv:4.5.1-2")
 

@@ -27,6 +27,7 @@ fun main() {
     val api = WebOptionsBuilder(null, serializer, ConnectionType.LAST).build()
     api.addLoggedInListener(OnLoggedIn {
         logger.info("Hello Whatsapp")
+        api.changePresence(false).join()
     })
     api.registerFloppaHandler()
     api.connect().join()
