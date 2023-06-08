@@ -10,7 +10,7 @@ import com.aallam.openai.api.model.ModelId
 import de.duckulus.floppa.command.Command
 import de.duckulus.floppa.command.CommandContext
 import de.duckulus.floppa.command.PermissionLevel
-import it.auties.whatsapp.api.Emojy
+import it.auties.whatsapp.api.Emoji
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.contact.ContactJid
 import it.auties.whatsapp.model.info.MessageInfo
@@ -39,7 +39,7 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
                 whatsapp.sendMessage(messageInfo.chat(), "Please provide a prompt or reply to a message")
                 return@runBlocking
             }
-            whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
+            whatsapp.sendReaction(messageInfo, Emoji.COUNTERCLOCKWISE_ARROWS_BUTTON)
 
             val contextList: MutableList<ChatMessage>
 
@@ -109,7 +109,7 @@ object Chat : Command("chat", "generates text with gpt-3.5-turbo", PermissionLev
                     contexts.remove(messageInfo.chatJid())
                 }
             }
-            whatsapp.sendReaction(messageInfo, Emojy.CHECK_MARK_BUTTON)
+            whatsapp.sendReaction(messageInfo, Emoji.CHECK_MARK_BUTTON)
         }
 
     }

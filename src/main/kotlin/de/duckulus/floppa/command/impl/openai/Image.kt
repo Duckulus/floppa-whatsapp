@@ -6,7 +6,7 @@ import com.aallam.openai.api.image.ImageSize
 import de.duckulus.floppa.command.Command
 import de.duckulus.floppa.command.CommandContext
 import de.duckulus.floppa.command.PermissionLevel
-import it.auties.whatsapp.api.Emojy
+import it.auties.whatsapp.api.Emoji
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.ImageMessage
@@ -27,7 +27,7 @@ object Image : Command("image", "generates an image with DALL.E", PermissionLeve
                 whatsapp.sendMessage(messageInfo.chat(), "Please provide a prompt or reply to a message")
                 return@runBlocking
             }
-            whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
+            whatsapp.sendReaction(messageInfo, Emoji.COUNTERCLOCKWISE_ARROWS_BUTTON)
             val reply = openAi.imageJSON(
                 ImageCreation(
                     prompt = prompt,

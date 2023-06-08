@@ -3,7 +3,7 @@ package de.duckulus.floppa.command.impl
 import de.duckulus.floppa.command.Command
 import de.duckulus.floppa.command.CommandContext
 import de.duckulus.floppa.command.PermissionLevel
-import it.auties.whatsapp.api.Emojy
+import it.auties.whatsapp.api.Emoji
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.VideoMessage
@@ -24,7 +24,7 @@ object Download : Command("download", "Downloads a file from the internet using 
     private val downloadMutex = Mutex()
 
     override fun execute(whatsapp: Whatsapp, messageInfo: MessageInfo, args: Array<String>, ctx: CommandContext) {
-        whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
+        whatsapp.sendReaction(messageInfo, Emoji.COUNTERCLOCKWISE_ARROWS_BUTTON)
         runBlocking {
             downloadMutex.withLock {
 

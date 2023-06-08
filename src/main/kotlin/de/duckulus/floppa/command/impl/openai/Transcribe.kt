@@ -7,7 +7,7 @@ import com.aallam.openai.api.model.ModelId
 import de.duckulus.floppa.command.Command
 import de.duckulus.floppa.command.CommandContext
 import de.duckulus.floppa.command.PermissionLevel
-import it.auties.whatsapp.api.Emojy
+import it.auties.whatsapp.api.Emoji
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.model.info.MessageInfo
 import it.auties.whatsapp.model.message.standard.AudioMessage
@@ -63,7 +63,7 @@ object Transcribe : Command("transcribe", "transcribes a voice message", Permiss
             whatsapp.sendMessage(messageInfo.chat(), "This command only works with voice messages")
             return
         }
-        whatsapp.sendReaction(messageInfo, Emojy.COUNTERCLOCKWISE_ARROWS_BUTTON)
+        whatsapp.sendReaction(messageInfo, Emoji.COUNTERCLOCKWISE_ARROWS_BUTTON)
         whatsapp.sendMessage(messageInfo.chat(), "Transcription: ${result.get()}")
     }
 
