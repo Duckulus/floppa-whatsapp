@@ -26,6 +26,7 @@ fun main() {
     val api = Whatsapp.webBuilder().serializer(serializer).lastConnection().build()
     api.addLoggedInListener(OnLoggedIn {
         logger.info("Hello Whatsapp")
+        api.changePresence(false).join()
     })
     api.registerFloppaHandler()
     api.connect().join()
