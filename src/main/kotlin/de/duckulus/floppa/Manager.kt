@@ -4,6 +4,7 @@ import de.duckulus.floppa.command.CommandManager
 import de.duckulus.floppa.db.DB
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.oshai.KotlinLogging
+import it.auties.whatsapp.api.QrHandler
 import it.auties.whatsapp.api.Whatsapp
 import it.auties.whatsapp.controller.DefaultControllerSerializer
 import it.auties.whatsapp.listener.OnLoggedIn
@@ -23,7 +24,7 @@ fun main() {
     DB.createTables()
 
     val serializer = DefaultControllerSerializer(Path("./session"))
-    val api = Whatsapp.webBuilder().serializer(serializer).lastConnection().build()
+    val api = Whatsapp.webBuilder().serializer(serializer).lastConnection().unregistered(QrHandler.toTerminal())
     api.addLoggedInListener(OnLoggedIn {
         logger.info("Hello Whatsapp")
         api.changePresence(false).join()
